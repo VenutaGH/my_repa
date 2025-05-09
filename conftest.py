@@ -1,19 +1,13 @@
 import pytest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-
-
-
+from driver_module import Driver
 
 
 @pytest.fixture
-def browser():
-    browser = webdriver.Firefox()
-    browser.maximize_window()
+def browser_fixture():
+    browser = Driver.setup_browser()
     yield browser
 
 @pytest.fixture
-def wait(browser):
-    wait = WebDriverWait(browser, 15)
+def wait_fixture(browser_fixture):
+    wait = Driver.wait(browser_fixture)
     yield wait

@@ -2,4 +2,4 @@ venv
 .idea
 __pycache__
 __pytest.cache__
-
+main.py
