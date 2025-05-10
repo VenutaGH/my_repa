@@ -1,5 +1,5 @@
 from itertools import pairwise
-
+import random
 
 class Paws:
     def __init__(self):
@@ -37,16 +37,25 @@ class Animal:
         self.tail.do_action()
 
     @classmethod
-    def merge(cls, kitty1, kitty2):
-        combined_name = f"{kitty1.name}-{kitty2.name}"
-        combined_ears = f"{kitty1.ears}+{kitty2.ears}"
-        new_paws = Paws()
-        new_paws.action = f"combo paws of {kitty1.name} and {kitty2.name}"
+    def merge(cls, animal1, animal2):
+        if type(animal1) != type(animal2):
+            print("Cannot merge different types of animals.")
+            return None
 
-        new_kitty = Kitty(combined_ears, combined_name, new_paws)
-        new_kitty.tail.action = f"merged tails of {kitty1.name} and {kitty2.name}"
-        cls.head = False
-        return new_kitty
+        animal_cls = type(animal1)
+
+        combined_name = f"{animal1.name}-{animal2.name}"
+        new_paws = Paws()
+        new_paws.action = f"combo paws of {animal1.name} and {animal2.name}"
+
+        if animal_cls is Kitty:
+            combined_ears = f"{animal1.ears}+{animal2.ears}"
+            new_animal = animal_cls(combined_ears, combined_name, new_paws)
+        else:
+            new_animal = animal_cls(combined_name, new_paws)
+
+        new_animal.tail.action = f"merged tails of {animal1.name} and {animal2.name}"
+        return new_animal
 
 
 class Kitty(Animal):
@@ -67,32 +76,46 @@ class Zoo:
     def __init__(self):
         self.animals = []
 
-    def add_animal(self, animal):
-        if isinstance(animal, (Kitty, Dogge)):
-            self.animals.append(animal)
-        else:
-            print("У нас тут только коты и собаки.")
+    def add_animal(self, *animals):
+        for animal in animals:
+            if isinstance(animal, (Kitty, Dogge)):
+                self.animals.append(animal)
+            else:
+                print(f"{animal} — У нас тут только коты и собаки, никаких котопсов.")
 
     def show_all_animals(self):
         for animal in self.animals:
             animal.perform_actions()
 
-    def merge_animals(self, animal1, animal2):
-        if isinstance(animal1, Kitty) and isinstance(animal2, Kitty):
-            new_kitty = Animal.merge(animal1, animal2)
-            self.add_animal(new_kitty)
-            return new_kitty
-
-        elif isinstance(animal1, Dogge) and isinstance(animal2, Dogge):
-            combined_name = f"{animal1.name}-{animal2.name}"
-            new_dogge = Dogge(combined_name, Paws())
-            new_dogge.paws.action = f"giving a paw of {animal1.name} and {animal2.name}"
-            self.add_animal(new_dogge)
-            return new_dogge
-
+    def animal_hardcore_sex(self, animal1, animal2):
+        merged_animal = Animal.merge(animal1, animal2)
+        if merged_animal:
+            self.add_animal(merged_animal)
+            print(f"Жоска переебались,появилось новое животное: {merged_animal.name}")
         else:
-            print("Cannot merge different types of animals.")
-            return None
+            print("поебаться не удалось.")
+
+
+    @staticmethod
+    def no_contraception():
+        animal_class = random.choice ([Kitty, Dogge])
+        name = 'tyranda'
+        paws = Paws()
+
+        if animal_class is Kitty:
+                ears = "ripped ears"
+                return animal_class(ears, name, paws)
+        else:
+
+                return animal_class(name, paws)
+
+    @staticmethod
+    def multiple_bithing(n):
+        bithed_animals = []
+        for i in range(n):
+            new_animal = Zoo.no_contraception()
+            bithed_animals.append(new_animal)
+        return bithed_animals
 
 
 
@@ -102,14 +125,7 @@ class Zoo:
 
 
 
-
-
-
-
-
-
-
-
+    # Пример создания животных:
 paws1 = Paws()
 paws1.action = "pawing the ground"
 kitty1 = Kitty("Pointy", "Kitty1", paws1)
@@ -126,23 +142,36 @@ paws4 = Paws()
 paws4.action = "running fast"
 dogge2 = Dogge("Max", paws4)
 
-# creating Zoo
+    # Создаем зоопарк
 zoo = Zoo()
-zoo.add_animal(kitty1)
-zoo.add_animal(kitty2)
-zoo.add_animal(dogge1)
-zoo.add_animal(dogge2)
 
+zoo = Zoo()
+zoo.add_animal(kitty1, kitty2, dogge1, dogge2)
+
+
+ # Отображаем всех животных
 zoo.show_all_animals()
 
-# Merge two cats
-merged_kitty = zoo.merge_animals(kitty1, kitty2)
+    # Пример "слияния" двух животных
+zoo.animal_hardcore_sex(kitty1, kitty2)
 zoo.show_all_animals()
 
-# Merge two dogs
-merged_dogge = zoo.merge_animals(dogge1, dogge2)
+zoo.animal_hardcore_sex(dogge1, dogge2)
 zoo.show_all_animals()
 
-# trying to merge two different pets (Kitty и Dogge)
-zoo.merge_animals(kitty1, dogge1)
+    # Пример невозможного слияния
+zoo.animal_hardcore_sex(kitty1, dogge1)
 
+
+new_animal = zoo.no_contraception()
+
+zoo = Zoo()
+# zoo.multiple_bithing(1000000000)
+pizda_zooparku = zoo.multiple_bithing(50)
+print(pizda_zooparku)
+zoo.add_animal(*pizda_zooparku)
+
+zoo.show_all_animals()
+#
+# zoo = Zoo()
+# zoo.add_animal(sad asd asd as das d)
